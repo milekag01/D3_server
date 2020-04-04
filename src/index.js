@@ -7,133 +7,155 @@ const Project = require('./models/project');
 const Task = require('./models/task');
 
 // ---------------------------User Routes--------------------------- //
-app.post('/users', (req,res) => {
+app.post('/users', async (req,res) => {
     const user = new User(req.body);
 
-    user.save().then((response) => {
-        res.status(201).send(response)
-    }).catch((error => {
+    try {
+        await user.save();
+        res.status(201).send(user)
+    } catch(error) {
         res.status(400).send(error);    // client error
-    }))
+    }
 })
 
-app.get('/users', (req,res) => {
-    User.find({}).then((users) => {
+app.get('/users', async (req,res) => {
+
+    try {
+        const users = await User.find({});
         res.send(users);
-    }).catch((error) => {
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
-app.get('/users/:id', (req,res) => {
+app.get('/users/:id', async (req,res) => {
     const _id = req.params.id;
 
-    User.findById(_id).then((user) => {
+    try {
+        const user = await User.findById(_id);
         if(!user) {
             return res.status(404).send('Unable to find user')
         }
         res.send(user);
-    }).catch((error) => {
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
 // ---------------------------Client Routes-------------------------- //
-app.post('/clients', (req,res) => {
+app.post('/clients', async (req,res) => {
     const client = new Client(req.body);
 
-    client.save().then((response) => {
-        res.status(201).send(response)
-    }).catch((error => {
+    try {
+        await client.save();
+        res.status(201).send(client)
+    } catch(error) {
         res.status(400).send(error);    // client error
-    }))
+    }
 })
 
-app.get('/clients', (req,res) => {
-    Client.find({}).then((clients) => {
+app.get('/clients', async (req,res) => {
+
+    try {
+        const clients = await Client.find({});
         res.send(clients);
-    }).catch((error) => {
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
-app.get('/clients/:id', (req,res) => {
+app.get('/clients/:id', async (req,res) => {
     const _id = req.params.id;
 
-    Client.findById(_id).then((client) => {
+    try {
+        const client = await Client.findById(_id);
         if(!client) {
             return res.status(404).send('Unable to find client')
         }
         res.send(client);
-    }).catch((error) => {
+
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
 
 // ---------------------------Project Routes------------------------  //
-app.post('/projects', (req,res) => {
+app.post('/projects', async (req,res) => {
     const project = new Project(req.body);
 
-    project.save().then((response) => {
-        res.status(201).send(response)
-    }).catch((error => {
+    try {
+        await project.save();
+        res.status(201).send(response);
+    } catch(error) {
         res.status(400).send(error);    // client error
-    }))
+    }
 })
 
-app.get('/projects', (req,res) => {
-    Project.find({}).then((projects) => {
+app.get('/projects', async (req,res) => {
+
+    try {
+        const projects = await Project.find({});
         res.send(projects);
-    }).catch((error) => {
+
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
-app.get('/projects/:id', (req,res) => {
+app.get('/projects/:id', async (req,res) => {
     const _id = req.params.id;
 
-    Project.findById(_id).then((project) => {
+    try {
+        const project = await Project.findById(_id);
         if(!project) {
             return res.status(404).send('Unable to find project')
         }
         res.send(project);
-    }).catch((error) => {
+
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
 
 // ---------------------------Task Routes---------------------------- //
-app.post('/tasks', (req,res) => {
+app.post('/tasks', async (req,res) => {
     const task = new Task(req.body);
 
-    task.save().then((response) => {
+    try {
+        await task.save();
         res.status(201).send(response)
-    }).catch((error => {
+    
+    } catch(error) {
         res.status(400).send(error);    // client error
-    }))
+    }
 })
 
-app.get('/tasks', (req,res) => {
-    Task.find({}).then((tasks) => {
+app.get('/tasks', async (req,res) => {
+
+    try {
+        const tasks = await Task.find({});
         res.send(tasks);
-    }).catch((error) => {
+
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
-app.get('/tasks/:id', (req,res) => {
+app.get('/tasks/:id', async (req,res) => {
     const _id = req.params.id;
 
-    Task.findById(_id).then((task) => {
+    try {
+        const task = await Task.findById(_id);
         if(!task) {
             return res.status(404).send('Unable to find task')
         }
         res.send(task);
-    }).catch((error) => {
+
+    } catch(error) {
         res.status(500).send(error);    // Server error
-    })
+    }
 })
 
 
