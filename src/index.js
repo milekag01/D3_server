@@ -42,6 +42,34 @@ app.get('/users/:id', async (req,res) => {
     }
 })
 
+app.patch('/users/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        if(!user) {
+            res.status(404).send('unable to find the user to update');
+        }
+        res.send(user);
+
+    } catch(error) {
+        res.status(400).send(error);
+    }
+})
+
+app.delete('/users/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const user = await User.findByIdAndDelete(_id);
+        if(!user) {
+            return res.status(404).send('No user to delete with given id');
+        }
+        res.send(user);
+
+    } catch(error) {
+        res.status(500).send(error);
+    }
+})
+
 // ---------------------------Client Routes-------------------------- //
 app.post('/clients', async (req,res) => {
     const client = new Client(req.body);
@@ -79,6 +107,33 @@ app.get('/clients/:id', async (req,res) => {
     }
 })
 
+app.patch('/clients/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const client = await Client.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        if(!client) {
+            res.status(404).send('unable to find the client to update');
+        }
+        res.send(client);
+
+    } catch(error) {
+        res.status(400).send(error);
+    }
+})
+
+app.delete('/clients/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const client = await Client.findByIdAndDelete(_id);
+        if(!client) {
+            return res.status(404).send('No client to delete with given id');
+        }
+        res.send(client);
+
+    } catch(error) {
+        res.status(500).send(error);
+    }
+})
 
 // ---------------------------Project Routes------------------------  //
 app.post('/projects', async (req,res) => {
@@ -118,6 +173,33 @@ app.get('/projects/:id', async (req,res) => {
     }
 })
 
+app.patch('/projects/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const project = await Project.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        if(!project) {
+            res.status(404).send('unable to find the project to update');
+        }
+        res.send(project);
+
+    } catch(error) {
+        res.status(400).send(error);
+    }
+})
+
+app.delete('/projects/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const project = await Project.findByIdAndDelete(_id);
+        if(!project) {
+            return res.status(404).send('No project to delete with given id');
+        }
+        res.send(project);
+
+    } catch(error) {
+        res.status(500).send(error);
+    }
+})
 
 // ---------------------------Task Routes---------------------------- //
 app.post('/tasks', async (req,res) => {
@@ -158,6 +240,33 @@ app.get('/tasks/:id', async (req,res) => {
     }
 })
 
+app.patch('/tasks/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const task = await Task.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        if(!task) {
+            res.status(404).send('unable to find the task to update');
+        }
+        res.send(task);
+
+    } catch(error) {
+        res.status(400).send(error);
+    }
+})
+
+app.delete('/tasks/:id', async (req,res) => {
+    const _id = req.params.id;
+    try {
+        const task = await Task.findByIdAndDelete(_id);
+        if(!task) {
+            return res.status(404).send('No task to delete with given id');
+        }
+        res.send(task);
+
+    } catch(error) {
+        res.status(500).send(error);
+    }
+})
 
 // ---------------------------Server -------------------------------- //
 const port = process.env.PORT || 3000;
