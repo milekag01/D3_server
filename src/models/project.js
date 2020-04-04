@@ -36,4 +36,4 @@ const Project = mongoose.model('Project', {
     } 
 })
 
-export default Project;
+module.exports = Project;

@@ -29,4 +29,4 @@ const Task = mongoose.model('Task', {
     }
 });
 
-export default Task;
+module.exports = Task;

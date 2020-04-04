@@ -46,4 +46,4 @@ const User = mongoose.model('User',{
     }
 });
 
-export default User;
+module.exports = User;

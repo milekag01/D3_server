@@ -33,4 +33,4 @@ const Client = mongoose.model('Client', {
     }
 });
 
-export default Client;
+module.exports = Client;
