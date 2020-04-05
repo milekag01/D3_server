@@ -69,6 +69,27 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+// userSchema.methods.getPublicProfile = function() {
+//     const user = this;
+//     const userObject = user.toObject();
+
+//     delete userObject.password;
+//     delete userObject.tokens;
+
+//     return userObject;
+// }
+
+// since res.send() uses toStringify everytime it is called, this function will run by default
+userSchema.methods.toJSON = function() {
+    const user = this;
+    const userObject = user.toObject();
+
+    delete userObject.password;
+    delete userObject.tokens;
+
+    return userObject;
+}
+
 // this kind of methods are instance specific.
 userSchema.methods.generateAuthToken = async function() {
     const user = this;
