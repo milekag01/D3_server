@@ -32,7 +32,7 @@ const Project = mongoose.model('Project', {
         type: Array
     },
     created_on: {
-        type: Date,
+        type: Date
     } 
 })
 

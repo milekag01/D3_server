@@ -3,6 +3,8 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const Client = require('./client');
+
 const userSchema = mongoose.Schema({
     name: {
         type: String,
@@ -56,6 +58,12 @@ const userSchema = mongoose.Schema({
             required: true
         }
     }]
+});
+
+userSchema.virtual('clients', {
+    ref: 'Client',
+    localField: '_id',
+    foreignField: 'owner'
 });
 
 // middleware to hash the password before saving
@@ -117,6 +125,12 @@ userSchema.statics.findByCredentials = async (email,password) => {
     }
     return user;
 }
+
+userSchema.pre('remove', async function(next) {
+    const user = this;
+    await Client.deleteMany({owner: user._id});
+    next();
+})
 
 const User = mongoose.model('User',userSchema);
 module.exports = User;

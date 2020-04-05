@@ -30,7 +30,12 @@ const Client = mongoose.model('Client', {
     },
     projects: {
         type: Array
-    }
+    },
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref :'User'
+    } 
 });
 
 module.exports = Client;
