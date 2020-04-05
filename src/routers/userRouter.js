@@ -45,16 +45,19 @@ router.post('/users/logoutAll',auth,async (req,res) => {
 
 // signup route
 router.post('/users', async (req,res) => {
+    console.log(req.body)
     const user = new User(req.body);
-
+    console.log('userPost: ', user);
     try {
+        
         await user.save();
+        console.log('user saved');
         // generating 1st token right after signup
         const token = await user.generateAuthToken();
         res.status(201).send({user, token});
 
     } catch(error) {
-        res.status(400).send(error);    // client error
+        res.status(400).send('unable to create user: server error');    // client error
     }
 })
 

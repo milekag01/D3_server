@@ -38,7 +38,7 @@ router.get('/clients/:id',auth,async (req,res) => {
 
     try {
         // const client = await Client.findById(_id);
-        const client = await Client.findOne({id, owner: req.user._id});
+        const client = await Client.findOne({_id, owner: req.user._id});
 
         if(!client) {
             return res.status(404).send('Unable to find client')

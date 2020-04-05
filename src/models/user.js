@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const Client = require('./client');
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -17,7 +17,7 @@ const userSchema = mongoose.Schema({
         unique: true,
         trim: true,
         lowercase: true,
-        validate: (value) => {
+        validate(value) {
             if(!validator.isEmail(value)) {
                 throw new Error('Email is invalid')
             }
@@ -35,7 +35,7 @@ const userSchema = mongoose.Schema({
         required: true,
         minLength: 8,
         trim: true,
-        validate: (value) => {
+        validate(value) {
             if(value.toLowerCase().includes('password')) {
                 throw new Error(`Password cannot contain "password"`)
             }
@@ -66,16 +66,7 @@ userSchema.virtual('clients', {
     foreignField: 'owner'
 });
 
-// middleware to hash the password before saving
-userSchema.pre('save', async function(next) {
-    const user = this;
 
-    if(user.isModified('password')) {
-        user.password = await bcrypt(user.password, 8);
-    }
-
-    next();
-});
 
 // userSchema.methods.getPublicProfile = function() {
 //     const user = this;
@@ -101,10 +92,10 @@ userSchema.methods.toJSON = function() {
 // this kind of methods are instance specific.
 userSchema.methods.generateAuthToken = async function() {
     const user = this;
-    const token = jwt.sign({_id: user._id.toString() }, '13reasonswhy', {expiresIn: '10h'});
-    
+    const token = jwt.sign({_id: user._id.toString() }, '13reasonswhy');
+    console.log(token);
     // saving tokens to keep track of all login instances
-    user.tokens = user.tokens.concat({token: token});
+    user.tokens = user.tokens.concat({token});
     await user.save();
 
     return token;
@@ -113,7 +104,7 @@ userSchema.methods.generateAuthToken = async function() {
 // custom method to create a login route
 // static methods are accessible on models
 userSchema.statics.findByCredentials = async (email,password) => {
-    const user = await User.findOne({email,email});
+    const user = await User.findOne({email: email});
 
     if(!user) {
         throw new Error('User does not exist');
@@ -125,6 +116,17 @@ userSchema.statics.findByCredentials = async (email,password) => {
     }
     return user;
 }
+
+// middleware to hash the password before saving
+userSchema.pre('save', async function(next) {
+    const user = this;
+
+    if(user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 8);
+    }
+
+    next();
+});
 
 userSchema.pre('remove', async function(next) {
     const user = this;

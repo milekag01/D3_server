@@ -33,7 +33,7 @@ const Project = mongoose.model('Project', {
     },
     created_on: {
         type: Date
-    } 
+    }
 })
 
 module.exports = Project;
