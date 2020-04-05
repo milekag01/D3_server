@@ -2,6 +2,9 @@ const express = require('express');
 const User = require('../models/user');
 const router = new express.Router();
 
+// middlewares
+const auth = require('../middleware/auth');
+
 // custom login route based on custom login middleware
 router.post('/users/login', async (req,res) => {
     try {
@@ -29,15 +32,21 @@ router.post('/users', async (req,res) => {
     }
 })
 
-router.get('/users', async (req,res) => {
-
-    try {
-        const users = await User.find({});
-        res.send(users);
-    } catch(error) {
-        res.status(500).send(error);    // Server error
-    }
+// get user profile when he is logged in
+router.get('/users/me',auth,async (req,res) => {
+    res.send(req.user);     // req.user in set when user is loggen in in our middleware
 })
+
+// get all users (only for admin)
+// router.get('/users', async (req,res) => {
+
+//     try {
+//         const users = await User.find({});
+//         res.send(users);
+//     } catch(error) {
+//         res.status(500).send(error);    // Server error
+//     }
+// })
 
 router.get('/users/:id', async (req,res) => {
     const _id = req.params.id;
