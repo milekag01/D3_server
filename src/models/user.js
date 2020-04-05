@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const userSchema = mongoose.Schema({
     name: {
@@ -44,7 +45,13 @@ const userSchema = mongoose.Schema({
     },
     links: {
         type: Array
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 });
 
 // middleware to hash the password before saving
@@ -58,7 +65,20 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+// this kind of methods are instance specific.
+userSchema.methods.generateAuthToken = async function() {
+    const user = this;
+    const token = jwt.sign({_id: user._id.toString() }, '13reasonswhy', {expiresIn: '10h'});
+    
+    // saving tokens to keep track of all login instances
+    user.tokens = user.tokens.concat({token: token});
+    await user.save();
+
+    return token;
+}
+
 // custom method to create a login route
+// static methods are accessible on models
 userSchema.statics.findByCredentials = async (email,password) => {
     const user = await User.findOne({email,email});
 
