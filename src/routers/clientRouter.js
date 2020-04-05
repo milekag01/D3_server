@@ -40,8 +40,18 @@ router.get('/clients/:id', async (req,res) => {
 
 router.patch('/clients/:id', async (req,res) => {
     const _id = req.params.id;
+    const updates = Object.keys(req.body);
+
     try {
-        const client = await Client.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        // const client = await Client.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        
+        const client = await Client.findById(_id);    
+        
+        updates.forEach((update) => {
+            client[update] = req.body[update]
+        });
+        await client.save();
+        
         if(!client) {
             res.status(404).send('unable to find the client to update');
         }

@@ -41,8 +41,18 @@ router.get('/projects/:id', async (req,res) => {
 
 router.patch('/projects/:id', async (req,res) => {
     const _id = req.params.id;
+    const updates = Object.keys(req.body);
+
     try {
-        const project = await Project.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        // const project = await Project.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
+        
+        const project = await Project.findById(_id);    
+        
+        updates.forEach((update) => {
+            project[update] = req.body[update]
+        });
+        await project.save();
+        
         if(!project) {
             res.status(404).send('unable to find the project to update');
         }
