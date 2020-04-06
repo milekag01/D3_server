@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const Project = mongoose.model('Project', {
+const projectSchema = new mongoose.Schema({
     project_name: {
         type: String,
         required: true,
@@ -30,10 +30,11 @@ const Project = mongoose.model('Project', {
     },
     tasks: {
         type: Array
-    },
-    created_on: {
-        type: Date
     }
-})
+}, {
+    timestamps: true
+});
+
+const Project = mongoose.model('Project', projectSchema);
 
 module.exports = Project;

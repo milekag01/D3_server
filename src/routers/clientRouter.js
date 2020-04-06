@@ -21,11 +21,27 @@ router.post('/clients',auth,async (req,res) => {
     }
 })
 
+//fuzzy search
+const escapeRegex = (text) => {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+}
+
 router.get('/clients',auth,async (req,res) => {
+    const match = {};
+
+    // filtering the clients based on search queries
+    // Also, converted to regex for fuzzy search
+    const queries = Object.keys(req.query);
+    queries.forEach((query) => {
+        match[query] = new RegExp(escapeRegex(req.query[query]), 'gi');
+    });
 
     try {
         // const clients = await Client.find({owner: req.user._id});
-        await req.user.populate('clients').execPopulate();
+        await req.user.populate({
+            path: 'clients',
+            match: match
+        }).execPopulate();
         res.send(req.user.clients);
 
     } catch(error) {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const Client = mongoose.model('Client', {
+const clientSchema = new mongoose.Schema({
     client_name: {
         type: String,
         required: true,
@@ -36,6 +36,10 @@ const Client = mongoose.model('Client', {
         required: true,
         ref :'User'
     } 
+},{
+    timestamps: true
 });
+
+const Client = mongoose.model('Client', clientSchema);
 
 module.exports = Client;
