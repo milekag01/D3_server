@@ -28,10 +28,17 @@ const escapeRegex = (text) => {
 
 router.get('/clients',auth,async (req,res) => {
     const match = {};
+    const sort = {};
 
-    // filtering the clients based on search queries when there is no pagination type query
-    // Also, converted to regex for fuzzy search
-    if(req.query.limit==undefined && req.query.skip==undefined) {
+    
+        // sorting of clients based on a given property in asc or desc order
+    if(req.query.sortBy) {
+        const parts = req.query.sortBy.split('=');
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
+    
+        // filtering the clients based on search queries when there is no pagination type query
+        // Also, converted to regex for fuzzy search
+    } else if(req.query.limit==undefined && req.query.skip==undefined) {
         const queries = Object.keys(req.query);
         queries.forEach((query) => {
             match[query] = new RegExp(escapeRegex(req.query[query]), 'gi');
@@ -45,7 +52,8 @@ router.get('/clients',auth,async (req,res) => {
             match: match,
             options: {
                 limit: parseInt(req.query.limit),
-                skip: parseInt(req.query.skip)
+                skip: parseInt(req.query.skip),
+                sort: sort
             }
         }).execPopulate();
         res.send(req.user.clients);
