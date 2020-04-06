@@ -5,7 +5,7 @@ const router = new express.Router();
 // middlewares
 const auth = require('../middleware/auth');
 
-router.post('/clients',auth,async (req,res) => {
+router.post('/clients', auth, async (req, res) => {
     // const client = new Client(req.body);
 
     const client = new Client({
@@ -63,7 +63,7 @@ router.get('/clients',auth,async (req,res) => {
     }
 })
 
-router.get('/clients/:id',auth,async (req,res) => {
+router.get('/clients/:id', auth, async (req, res) => {
     const _id = req.params.id;
 
     try {
@@ -80,16 +80,16 @@ router.get('/clients/:id',auth,async (req,res) => {
     }
 })
 
-router.patch('/clients/:id',auth,async (req,res) => {
+router.patch('/clients/:id', auth, async (req, res) => {
     // const _id = req.params.id;
     const updates = Object.keys(req.body);
 
     try {
         // const client = await Client.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
-        
-        // const client = await Client.findById(_id);    
-        const client = await Client.findOne({_id: req.params.id, owner: req.user._id});    
-        
+
+        // const client = await Client.findById(_id);
+        const client = await Client.findOne({_id: req.params.id, owner: req.user._id});
+
         if(!client) {
             res.status(404).send('unable to find the client to update');
         }
@@ -98,8 +98,8 @@ router.patch('/clients/:id',auth,async (req,res) => {
             client[update] = req.body[update]
         });
         await client.save();
-        
-        
+
+
         res.send(client);
 
     } catch(error) {
@@ -107,7 +107,7 @@ router.patch('/clients/:id',auth,async (req,res) => {
     }
 })
 
-router.delete('/clients/:id',auth,async (req,res) => {
+router.delete('/clients/:id', auth, async (req, res) => {
     // const _id = req.params.id;
     try {
         // const client = await Client.findByIdAndDelete(_id);
