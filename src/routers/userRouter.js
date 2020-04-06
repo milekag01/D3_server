@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const sharp = require('sharp');
 const User = require('../models/user');
 const router = new express.Router();
 
@@ -160,6 +162,80 @@ router.delete('/users/me', auth, async (req, res) => {
 
     } catch(error) {
         res.status(500).send(error);
+    }
+})
+
+// file upload
+// const multer = require('multer');
+
+// here if we provide dest, we will never get the image or file in the function,
+// instead, it will be saved in local directory which we dont want.
+// so we remove that dest.
+
+// const upload = multer({
+//     dest: 'avataar',
+//     limits: {
+//         fileSize: 1000000
+//     },
+//     fileFilter(req, file, callback) {
+//         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+//             return callback(new Error('please upload an image'));
+//         }
+
+//         callback(undefined, true);
+//     }
+// });
+
+const upload = multer({
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, callback) {
+        if(!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return callback(new Error('please upload an image'));
+        }
+
+        callback(undefined, true);
+    }
+});
+
+// post avatar & update avatar
+router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) => {
+
+    const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer();
+    req.user.avatar = buffer;
+
+    await req.user.save();
+    res.send('upload successful');
+// eslint-disable-next-line no-unused-vars
+}, (error, req, res, next) => {
+    res.status(400).send({error: error.message});
+})
+
+// delete avatar
+router.delete('/users/me/avatar', auth, async (req, res) => {
+    req.user.avatar = undefined;
+    await req.user.save();
+
+    res.send('Avatar delete successful');
+})
+// note: to convert base64 to jpg back, use <img src="data:image/jpg;base64,---"></img>
+// to handle error inc ase of multer, we need a
+// function with call signature as shown above.
+
+// hosting file/image on a url to access it easily
+router.get('/users/:id/avatar', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+
+        if(!user || !user.avatar) {
+            throw new Error();
+        }
+        res.set('Content-Type', 'image/png');
+        res.send(user.avatar);
+
+    } catch(error) {
+        res.status(404).send();
     }
 })
 

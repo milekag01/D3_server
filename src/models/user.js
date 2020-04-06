@@ -57,7 +57,10 @@ const userSchema = new mongoose.Schema({
             type: String,
             required: true
         }
-    }]
+    }],
+    avatar: {
+        type: Buffer
+    }
 }, {
     timestamps: true
 });
@@ -87,6 +90,7 @@ userSchema.methods.toJSON = function() {
 
     delete userObject.password;
     delete userObject.tokens;
+    delete userObject.avatar;   // since avatar is big, we have hosted it on another url and do not need in our response now
 
     return userObject;
 }
