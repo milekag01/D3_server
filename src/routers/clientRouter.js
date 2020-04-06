@@ -26,18 +26,17 @@ const escapeRegex = (text) => {
     return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 }
 
-router.get('/clients',auth,async (req,res) => {
+router.get('/clients', auth, async (req, res) => {
     const match = {};
     const sort = {};
 
-    
-        // sorting of clients based on a given property in asc or desc order
+    // sorting of clients based on a given property in asc or desc order
     if(req.query.sortBy) {
         const parts = req.query.sortBy.split('=');
         sort[parts[0]] = parts[1] === 'desc' ? -1 : 1;
-    
-        // filtering the clients based on search queries when there is no pagination type query
-        // Also, converted to regex for fuzzy search
+
+    // filtering the clients based on search queries when there is no pagination type query
+    // Also, converted to regex for fuzzy search
     } else if(req.query.limit==undefined && req.query.skip==undefined) {
         const queries = Object.keys(req.query);
         queries.forEach((query) => {

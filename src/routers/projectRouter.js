@@ -2,7 +2,7 @@ const express = require('express');
 const Project = require('../models/project');
 const router = new express.Router();
 
-router.post('/projects', async (req,res) => {
+router.post('/projects', async (req, res) => {
     const project = new Project(req.body);
 
     try {
@@ -13,7 +13,7 @@ router.post('/projects', async (req,res) => {
     }
 })
 
-router.get('/projects', async (req,res) => {
+router.get('/projects', async (req, res) => {
 
     try {
         const projects = await Project.find({});
@@ -24,7 +24,7 @@ router.get('/projects', async (req,res) => {
     }
 })
 
-router.get('/projects/:id', async (req,res) => {
+router.get('/projects/:id', async (req, res) => {
     const _id = req.params.id;
 
     try {
@@ -39,20 +39,20 @@ router.get('/projects/:id', async (req,res) => {
     }
 })
 
-router.patch('/projects/:id', async (req,res) => {
+router.patch('/projects/:id', async (req, res) => {
     const _id = req.params.id;
     const updates = Object.keys(req.body);
 
     try {
         // const project = await Project.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
-        
-        const project = await Project.findById(_id);    
-        
+
+        const project = await Project.findById(_id);
+
         updates.forEach((update) => {
             project[update] = req.body[update]
         });
         await project.save();
-        
+
         if(!project) {
             res.status(404).send('unable to find the project to update');
         }
@@ -63,7 +63,7 @@ router.patch('/projects/:id', async (req,res) => {
     }
 })
 
-router.delete('/projects/:id', async (req,res) => {
+router.delete('/projects/:id', async (req, res) => {
     const _id = req.params.id;
     try {
         const project = await Project.findByIdAndDelete(_id);

@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
-},{
+}, {
     timestamps: true
 });
 
@@ -105,7 +105,7 @@ userSchema.methods.generateAuthToken = async function() {
 
 // custom method to create a login route
 // static methods are accessible on models
-userSchema.statics.findByCredentials = async (email,password) => {
+userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({email: email});
 
     if(!user) {
@@ -136,5 +136,5 @@ userSchema.pre('remove', async function(next) {
     next();
 })
 
-const User = mongoose.model('User',userSchema);
+const User = mongoose.model('User', userSchema);
 module.exports = User;

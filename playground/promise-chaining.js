@@ -24,7 +24,7 @@ Task.findByIdAndDelete('taskid').then((task) => {
 const updateAgeAndCount = async (id, age) => {
     const user = await User.findByIdAndUpdate(id, {age: age});
     const count = await User.countDocuments({age: age});
-    return count;
+    return {user, count};
 }
 
 updateAgeAndCount('12345werty', 3).then((count) => {
