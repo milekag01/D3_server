@@ -29,18 +29,24 @@ const escapeRegex = (text) => {
 router.get('/clients',auth,async (req,res) => {
     const match = {};
 
-    // filtering the clients based on search queries
+    // filtering the clients based on search queries when there is no pagination type query
     // Also, converted to regex for fuzzy search
-    const queries = Object.keys(req.query);
-    queries.forEach((query) => {
-        match[query] = new RegExp(escapeRegex(req.query[query]), 'gi');
-    });
-
+    if(req.query.limit==undefined && req.query.skip==undefined) {
+        const queries = Object.keys(req.query);
+        queries.forEach((query) => {
+            match[query] = new RegExp(escapeRegex(req.query[query]), 'gi');
+        });
+    }
+    console.log(req.query);
     try {
         // const clients = await Client.find({owner: req.user._id});
         await req.user.populate({
             path: 'clients',
-            match: match
+            match: match,
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip)
+            }
         }).execPopulate();
         res.send(req.user.clients);
 
