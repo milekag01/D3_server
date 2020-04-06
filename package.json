@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "lint": "jshint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "keywords": [],
   "author": "milekag01",
@@ -20,7 +21,7 @@
     "validator": "^13.0.0"
   },
   "devDependencies": {
-    "jshint": "^2.11.0",
+    "eslint": "^6.8.0",
     "nodemon": "^2.0.2"
   }
 }
