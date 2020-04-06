@@ -34,8 +34,8 @@ const Client = mongoose.model('Client', {
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref :'User'
-    } 
+        ref: 'User'
+    }
 });
 
 module.exports = Client;

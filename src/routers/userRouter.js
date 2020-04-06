@@ -6,11 +6,11 @@ const router = new express.Router();
 const auth = require('../middleware/auth');
 
 // custom login route based on custom login middleware
-router.post('/users/login', async (req,res) => {
+router.post('/users/login', async (req, res) => {
     try {
-        const user = await User.findByCredentials(req.body.email,req.body.password);
+        const user = await User.findByCredentials(req.body.email, req.body.password);
         const token = await user.generateAuthToken();
-        res.send({user,token});
+        res.send({user, token});
 
     } catch(error) {
         res.status(400).send(error);
@@ -18,7 +18,7 @@ router.post('/users/login', async (req,res) => {
 })
 
 // logout
-router.post('/users/logout',auth, async (req,res) => {
+router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => {
             return token.token !== req.token
@@ -32,7 +32,7 @@ router.post('/users/logout',auth, async (req,res) => {
 })
 
 // logout all sessions
-router.post('/users/logoutAll',auth,async (req,res) => {
+router.post('/users/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = []
         await req.user.save();
@@ -44,12 +44,12 @@ router.post('/users/logoutAll',auth,async (req,res) => {
 });
 
 // signup route
-router.post('/users', async (req,res) => {
+router.post('/users', async (req, res) => {
     console.log(req.body)
     const user = new User(req.body);
     console.log('userPost: ', user);
     try {
-        
+
         await user.save();
         console.log('user saved');
         // generating 1st token right after signup
@@ -62,7 +62,7 @@ router.post('/users', async (req,res) => {
 })
 
 // get user profile when he is logged in
-router.get('/users/me',auth,async (req,res) => {
+router.get('/users/me', auth, async (req, res) => {
     res.send(req.user);     // req.user in set when user is loggen in in our middleware
 })
 
@@ -99,9 +99,9 @@ router.get('/users/me',auth,async (req,res) => {
 //     try {
 //         // const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
 //         // the above syntax skip the mongoose and hence we cannot use middleware used for hashing here
-        
-//         const user = await User.findById(_id);    
-        
+
+//         const user = await User.findById(_id);
+
 //         updates.forEach((update) => {
 //             user[update] = req.body[update]
 //         });
@@ -118,11 +118,11 @@ router.get('/users/me',auth,async (req,res) => {
 // })
 
 // edit my profile
-router.patch('/users/me',auth,async (req,res) => {
+router.patch('/users/me', auth, async (req, res) => {
     // const _id = req.user._id;
     const updates = Object.keys(req.body);
 
-    try {      
+    try {
         updates.forEach((update) => {
             req.user[update] = req.body[update]
         });
@@ -152,7 +152,7 @@ router.patch('/users/me',auth,async (req,res) => {
 // })
 
 // delete my profile
-router.delete('/users/me',auth,async (req,res) => {
+router.delete('/users/me', auth, async (req, res) => {
     const _id = req.user._id;
     try {
         await req.user.remove();    // mongodb method to remove a user

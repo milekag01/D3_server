@@ -2,7 +2,7 @@ const mongodb = require('mongodb')
 const MongoClient = mongodb.MongoClient
 const ObjectID = mongodb.ObjectID
 
-const connectionURL = 'mongodb://127.0.0.1:27017' 
+const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
 
 // const id = new ObjectID()
@@ -31,7 +31,7 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true, useUnifiedTopology: t
     //     console.log(error)
     // });
 
-    
+
 
     // db.collection('users').findOne({name: 'milek'},(error,user) => {
     //     console.log(user);
@@ -45,7 +45,7 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true, useUnifiedTopology: t
     //     console.log(users);
     // });
 
-    
+
 
     // this is async so we can pass a callback-------------------------
     // db.collection('users').insertOne({

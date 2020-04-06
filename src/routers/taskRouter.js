@@ -2,19 +2,19 @@ const express = require('express');
 const Task = require('../models/task');
 const router = new express.Router();
 
-router.post('/tasks', async (req,res) => {
+router.post('/tasks', async (req, res) => {
     const task = new Task(req.body);
 
     try {
         await task.save();
         res.status(201).send(task)
-    
+
     } catch(error) {
         res.status(400).send(error);    // client error
     }
 })
 
-router.get('/tasks', async (req,res) => {
+router.get('/tasks', async (req, res) => {
 
     try {
         const tasks = await Task.find({});
@@ -25,7 +25,7 @@ router.get('/tasks', async (req,res) => {
     }
 })
 
-router.get('/tasks/:id', async (req,res) => {
+router.get('/tasks/:id', async (req, res) => {
     const _id = req.params.id;
 
     try {
@@ -40,15 +40,15 @@ router.get('/tasks/:id', async (req,res) => {
     }
 })
 
-router.patch('/tasks/:id', async (req,res) => {
+router.patch('/tasks/:id', async (req, res) => {
     const _id = req.params.id;
     const updates = Object.keys(req.body)
 
     try {
         // const task = await Task.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true});
-        
-        const task = await Task.findById(_id);    
-        
+
+        const task = await Task.findById(_id);
+
         updates.forEach((update) => {
             task[update] = req.body[update]
         });
@@ -64,7 +64,7 @@ router.patch('/tasks/:id', async (req,res) => {
     }
 })
 
-router.delete('/tasks/:id', async (req,res) => {
+router.delete('/tasks/:id', async (req, res) => {
     const _id = req.params.id;
     try {
         const task = await Task.findByIdAndDelete(_id);

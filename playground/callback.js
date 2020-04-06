@@ -1,11 +1,11 @@
 const task = (callback) => {
     setTimeout(() => {
-        callback('error occured',undefined);
+        callback('error occured', undefined);
         // callback(undefined,'success');
-    },2000);
+    }, 2000);
 }
 
-task((error,res) => {
+task((error, res) => {
     if(error) {
         return console.log(error)
     }
