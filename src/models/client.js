@@ -28,9 +28,8 @@ const clientSchema = new mongoose.Schema({
         type: Number,
         trim: true
     },
-    projects: {
-        type: Array
-    },
+    projects: [String],
+
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
@@ -40,6 +39,8 @@ const clientSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
+
+
 
 const Client = mongoose.model('Client', clientSchema);
 
