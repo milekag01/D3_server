@@ -35,7 +35,8 @@ const clientSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
-    }
+    },
+    subowners: [String]
 }, {
     timestamps: true
 });

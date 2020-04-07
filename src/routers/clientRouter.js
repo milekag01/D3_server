@@ -1,7 +1,7 @@
 const express = require('express');
 const Client = require('../models/client');
 const router = new express.Router();
-
+const User = require('../models/user')
 // middlewares
 const auth = require('../middleware/auth');
 
@@ -12,6 +12,8 @@ router.post('/clients', auth, async (req, res) => {
         ...req.body,
         owner: req.user._id
     })
+    // const client = new Client(req.body)
+    // client.owners = client.owners.concat(req.user._id)
 
     try {
         await client.save();
@@ -45,7 +47,8 @@ router.get('/clients', auth, async (req, res) => {
     }
     console.log(req.query);
     try {
-        // const clients = await Client.find({owner: req.user._id});
+        const invitedClients = await Client.find({ 'subowners': req.user._id});
+
         await req.user.populate({
             path: 'clients',
             match: match,
@@ -55,7 +58,8 @@ router.get('/clients', auth, async (req, res) => {
                 sort: sort
             }
         }).execPopulate();
-        res.send(req.user.clients);
+        res.send({myClients: req.user.clients, invitedClients: invitedClients});
+        // res.send('invitedClients: '+ invitedClients);
 
     } catch(error) {
         res.status(500).send(error);    // Server error
@@ -118,6 +122,26 @@ router.delete('/clients/:id', auth, async (req, res) => {
 
     } catch(error) {
         res.status(500).send(error);
+    }
+})
+
+router.post('/clients/:id/addowner', auth, async (req, res) => {
+    const queryUser = await User.findOne({email: req.body.email});
+    // console.log(queryUser);
+    const client = await Client.findOne({_id: req.params.id, owner: req.user._id});
+    // console.log(client)
+
+    if(!queryUser || !client) {
+        return res.status(404).send('Client or user not available');
+    }
+    // console.log(queryUser)
+    // console.log(queryUser._id)
+    client.subowners = client.subowners.concat(queryUser._id);
+    try {
+        await client.save();
+        res.send('Subowner added');
+    } catch(error) {
+        res.send(500).send(error);
     }
 })
 
