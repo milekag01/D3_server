@@ -47,13 +47,13 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 
 // signup route
 router.post('/users', async (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     const user = new User(req.body);
-    console.log('userPost: ', user);
+    // console.log('userPost: ', user);
     try {
 
         await user.save();
-        console.log('user saved');
+        console.log('User Saved');
         // generating 1st token right after signup
         const token = await user.generateAuthToken();
         res.status(201).send({user, token});
