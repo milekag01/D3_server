@@ -1,33 +1,14 @@
 const app = require('../src/app');
 const request = require('supertest');
 const User = require('../src/models/user');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
+const {userOne, userOneId, setupDatabase} = require('./fixtures/db');
 
-const userOneId = new mongoose.Types.ObjectId();
-const userOne = {
-    _id: userOneId,
-    name: "milek1",
-    email: "milek1@gmail.com",
-    bio: "blah blah blah",
-    role: "Content writer",
-    password: "qwerty123",
-    authorised: true,
-    isAdmin: false,
-    links: [],
-    tokens: [{
-        token: jwt.sign({_id: userOneId}, '13reasonswhy')
-    }]
-}
+beforeEach(setupDatabase);
 
-beforeEach(async () => {
-    await User.deleteMany();
-    await new User(userOne).save();
-})
 test('Signup a new user', async () => {
     const response = await request(app).post('/users').send({
-        name: "milek2",
-        email: "milek2@gmail.com",
+        name: "milek5",
+        email: "milek5@gmail.com",
         bio: "blah blah blah ",
         role: "Content writer",
         password: "qwerty123",
@@ -43,8 +24,8 @@ test('Signup a new user', async () => {
     // Assertion about teh response
     expect(response.body).toMatchObject({
         user: {
-            name: "milek2",
-            email: "milek2@gmail.com"
+            name: "milek5",
+            email: "milek5@gmail.com"
         },
         token: user.tokens[0].token
     })
@@ -62,7 +43,7 @@ test('Login a user', async () => {
 
 test('Not login a non-existent user', async () => {
     await request(app).post('/users/login').send({
-        email: 'milek3@gmail.com',
+        email: 'milek9@gmail.com',
         password: 'qwerty123'
     }).expect(400)
 });
